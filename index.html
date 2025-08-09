@@ -100,12 +100,15 @@
 	for (const [i, karusell] of karusells.entries()) {
 	    const articles = Array.from(karusell.querySelectorAll("article"));
 	    currentArticles[i] = articles[0];
-
+		
+		karusell.addEventListener("scroll", () => {
+			articles.forEach(article => article.style.setProperty("--snap-align", "start"));
+		})
 	    articles.forEach(article => {
 	        article.addEventListener("click", () => onClick(i, article));
 	    });
 	}
-
+	
 
 	function onClick(i, article) {
 		if (article === currentArticles[i]) {
@@ -122,7 +125,6 @@
 			block: "nearest",
 			inline: "nearest"
 		})
-
 		currentArticles[i] = article;
 	}
 
