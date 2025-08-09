@@ -98,7 +98,7 @@
 	let currentArticles = karusells.map(() => null);
 	let lastScrollLeft = karusells.map(() => 0);
 	let debounce = karusells.map(() => 0);
-	const DEBOUNCE = 400;
+	const DEBOUNCE = 200;
 
 	for (const [i, karusell] of karusells.entries()) {
 	    const articles = Array.from(karusell.querySelectorAll("article"));
@@ -109,18 +109,26 @@
 
 			const currentScrollLeft = karusell.scrollLeft;
 
-			if (currentScrollLeft > lastScrollLeft[i]) {
+
+			const DEADBAND = 10;
+			if (currentScrollLeft > (lastScrollLeft[i] + DEADBAND)) {
 				// Scrolling right
 				articles.forEach(article => article.style.setProperty("--snap-align", "end"));
 				debounce[i] = true;
 				lastScrollLeft[i] = currentScrollLeft;
-				setTimeout(() => debounce[i] = false, DEBOUNCE);
-			} else if (currentScrollLeft < lastScrollLeft[i]){
+				setTimeout(() => {
+					lastScrollLeft[i] = karusell.scrollLeft;
+					debounce[i] = false;
+				}, DEBOUNCE);
+			} else if (currentScrollLeft < (lastScrollLeft[i] - DEADBAND)){
 				// Scrolling left
 				articles.forEach(article => article.style.setProperty("--snap-align", "start"));
 				debounce[i] = true;
 				lastScrollLeft[i] = currentScrollLeft;
-				setTimeout(() => debounce[i] = false, DEBOUNCE);
+				setTimeout(() => {
+					lastScrollLeft[i] = karusell.scrollLeft;
+					debounce[i] = false
+				}, DEBOUNCE);
 			}
 		})
 		karusell.addEventListener("keyup", e => console.log(e.key))
