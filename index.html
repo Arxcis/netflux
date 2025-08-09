@@ -95,15 +95,36 @@
 <script>
 	const karusells = Array.from(document.querySelectorAll("section.karusell"))
 
-	let currentArticles = karusells.map(() => null)
+	let currentArticles = karusells.map(() => null);
+	let lastScrollLeft = karusells.map(() => 0);
+	let debounce = karusells.map(() => 0);
+	const DEBOUNCE = 400;
 
 	for (const [i, karusell] of karusells.entries()) {
 	    const articles = Array.from(karusell.querySelectorAll("article"));
 	    currentArticles[i] = articles[0];
 		
 		karusell.addEventListener("scroll", () => {
-			articles.forEach(article => article.style.setProperty("--snap-align", "start"));
+			if (debounce[i]) return;
+
+			const currentScrollLeft = karusell.scrollLeft;
+
+			if (currentScrollLeft > lastScrollLeft[i]) {
+				// Scrolling right
+				articles.forEach(article => article.style.setProperty("--snap-align", "end"));
+				debounce[i] = true;
+				lastScrollLeft[i] = currentScrollLeft;
+				setTimeout(() => debounce[i] = false, DEBOUNCE);
+			} else if (currentScrollLeft < lastScrollLeft[i]){
+				// Scrolling left
+				articles.forEach(article => article.style.setProperty("--snap-align", "start"));
+				debounce[i] = true;
+				lastScrollLeft[i] = currentScrollLeft;
+				setTimeout(() => debounce[i] = false, DEBOUNCE);
+			}
 		})
+		karusell.addEventListener("keyup", e => console.log(e.key))
+
 	    articles.forEach(article => {
 	        article.addEventListener("click", () => onClick(i, article));
 	    });
