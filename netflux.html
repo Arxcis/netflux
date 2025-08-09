@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Karusell</title>
+</head>
+<body>
+	<header><h1>Netflux</h1></header>
+	<main>
+		<section class="karusell-header"><h2>Andor</h2></section>
+		<section class="karusell">
+			<article tabindex="0"><h3>Episode 1</h3></article>
+			<article tabindex="0"><h3>Episode 2</h3></article>
+			<article tabindex="0"><h3>Episode 3</h3></article>
+			<article tabindex="0"><h3>Episode 4</h3></article>
+			<article tabindex="0"><h3>Episode 5</h3></article>
+			<article tabindex="0"><h3>Episode 6</h3></article>
+			<article tabindex="0"><h3>Episode 7</h3></article>
+			<article tabindex="0"><h3>Episode 8</h3></article>
+		</section>
+		<section class="karusell-header"><h2>How I met your Mother</h2></section>
+		<section class="karusell">
+			<article tabindex="0"><h3>Episode 1</h3></article>
+			<article tabindex="0"><h3>Episode 2</h3></article>
+			<article tabindex="0"><h3>Episode 3</h3></article>
+			<article tabindex="0"><h3>Episode 4</h3></article>
+			<article tabindex="0"><h3>Episode 5</h3></article>
+			<article tabindex="0"><h3>Episode 6</h3></article>
+			<article tabindex="0"><h3>Episode 7</h3></article>
+			<article tabindex="0"><h3>Episode 8</h3></article>
+		</section>
+		<section class="karusell-header"><h2>Star Wars</h2></section>
+		<section class="karusell">
+			<article tabindex="0"><h3>Episode 1: Phantom menace</h3></article>
+			<article tabindex="0"><h3>Episode 2: Clone wars</h3></article>
+			<article tabindex="0"><h3>Episode 3</h3></article>
+			<article tabindex="0"><h3>Episode 4: A new hope</h3></article>
+			<article tabindex="0"><h3>Episode 5: </h3></article>
+			<article tabindex="0"><h3>Episode 6: Return of the jedi</h3></article>
+		</section>
+	</main>
+</body>
+<style>
+	:root {
+		--layout-margin: 2px;
+		--layout-width: calc(400px + var(--layout-margin) * 4);
+        --layout-padding: calc((100vw - var(--layout-width)) / 2);
+        --article-width: ;
+	}
+	body {
+		margin: 0;
+		background:  rgb(236, 236, 236);
+	}
+	header {
+		background: #c9c9c9;
+		padding: 10px 0 10px 15px;
+	}
+	header > h1 {
+		margin: 0;
+	}
+	.karusell-header {
+		max-width: var(--layout-width);
+		margin: auto;
+	}
+	.karusell-header > h2 {
+		background: #c9c9c9;
+		padding: 5px 10px;
+	}
+	.karusell {
+		background: #c9c9c9;
+		overflow-x: scroll;
+		scroll-snap-type: x mandatory;
+		padding-left: var(--layout-padding);
+		padding-right: var(--layout-padding);
+		scroll-padding-left: var(--layout-padding);
+		scroll-padding-right: var(--layout-padding);
+		display: flex;
+	}
+	article {
+		height: 200px;
+		min-width: 300px;
+		margin: 2px;
+		background: #A9A9A9;
+		scroll-snap-align: var(--snap-align, start);
+		touch-action: manipulation; /* eller none, hvis du vil stoppe scrolling her */
+    	cursor: pointer;
+	}
+	article:focus {
+		background: #D5ffff;
+		outline: none;
+	}
+</style>
+<script>
+	const karusells = Array.from(document.querySelectorAll("section.karusell"))
+
+	let currentArticles = karusells.map(() => null)
+
+	for (const [i, karusell] of karusells.entries()) {
+	    const articles = Array.from(karusell.querySelectorAll("article"));
+	    currentArticles[i] = articles[0];
+
+	    articles.forEach(article => {
+	        article.addEventListener("click", () => onClick(i, article));
+	    });
+	}
+
+
+	function onClick(i, article) {
+		if (article === currentArticles[i]) {
+			return;
+		}
+		if (article.compareDocumentPosition(currentArticles[i]) & Node.DOCUMENT_POSITION_FOLLOWING) {
+			article.style.setProperty("--snap-align", "start");			
+
+		} else {
+			article.style.setProperty("--snap-align", "end");
+		}
+		article.scrollIntoView({
+			behavior: "smooth",
+			block: "nearest",
+			inline: "nearest"
+		})
+
+		currentArticles[i] = article;
+	}
+
+</script>
+</html>
