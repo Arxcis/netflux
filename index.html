@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Karusell</title>
+	<title>Netflux</title>
 </head>
 <body>
 	<header><h1>Netflux</h1></header>
@@ -83,6 +83,9 @@
 		margin: 2px;
 		background: #A9A9A9;
 		scroll-snap-align: var(--snap-align, start);
+		-webkit-user-select: none; /* Safari/Chrome */
+		-moz-user-select: none;    /* Firefox */
+		user-select: none;         /* standard */
 	}
 	article:focus {
 		background: #D5ffff;
